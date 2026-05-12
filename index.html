@@ -18768,7 +18768,7 @@ function App(){
                       {p.ravito&&!isBase&&!isArr&&<span style={{fontSize:9,background:"#388F7F",color:"#fff",borderRadius:4,padding:"1px 5px"}}>RAVITO</span>}
                     </div>
                     <div style={{fontSize:15,fontWeight:p.ravito?700:400,color:isArr?"#E15629":isBase?"#063E3E":p.ravito?"#222":"#aaa"}}>{p.lieu}</div>
-                    <div style={{fontSize:11,color:"#636363",marginTop:2}}>{p.km} km · D+ cumulé {p.dpCum} m</div>
+                    <div style={{fontSize:11,color:"#636363",marginTop:2}}>{p.km} km</div>
                   </div>
                   <div style={{textAlign:"right",marginLeft:12,flexShrink:0}}>
                     <div style={{fontSize:22,fontWeight:700,color:isArr?"#E15629":"#063E3E",lineHeight:1}}>{p.heure}</div>
@@ -18777,6 +18777,7 @@ function App(){
                 </div>
                 {i>0&&(
                   <div style={{display:"flex",gap:12,marginTop:8,paddingTop:8,borderTop:"1px solid #eee",fontSize:11}}>
+                    <span style={{color:"#636363"}}>⟶ {p._dist.toFixed(1)} km</span>
                     <span style={{color:"#388F7F"}}>↑ {p.dpSeg}m</span>
                     <span style={{color:"#E15629"}}>↓ {p.dmSeg}m</span>
                     <span style={{color:"#636363",marginLeft:"auto"}}>{fmtPace(p.pace)}/km</span>
