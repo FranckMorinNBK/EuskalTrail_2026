@@ -18612,7 +18612,7 @@ function MapView({ passages }){
         <div style="color:#636363;font-size:12px;margin-top:3px">${cp.km} km · D+ cumulé ${cp.dpCum}m</div>
         <div style="font-weight:700;color:#E15629;font-size:18px;margin-top:4px">${p.heure||'--:--'}</div>
         ${i>0&&p.el?`<div style="color:#636363;font-size:12px;margin-top:2px">Tps course : ${fmtDur(p.el)} · ${fmtPace(p.pace)}/km</div>`:''}
-        ${i>0?`<div style="font-size:11px;color:#388F7F;margin-top:2px">↑ ${cp.dpSeg}m · ↓ ${cp.dmSeg}m (section)</div>`:''}
+        ${i>0?`<div style="font-size:11px;color:#388F7F;margin-top:2px">↑ ${cp.dpSeg}m · ↓ ${cp.dmSeg}m </div>`:''}
       `);
       mk.addTo(leafRef.current);
       mkRef.current.push(mk);
