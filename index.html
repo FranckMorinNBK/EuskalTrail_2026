@@ -18495,6 +18495,7 @@ const fmtDur = m => { const h=Math.floor(m/60); let mn=Math.round(m%60); if(mn==
 const fmtH = (s,el) => { const t=s+el; let h=Math.floor(t/60),m=Math.round(t%60); if(m===60){h++;m=0;} h=h%24; return`${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`; };
 const fmtPace = mpk => { const m=Math.floor(mpk),s=Math.round((mpk-m)*60); return`${m}'${String(s).padStart(2,"0")}`; };
 const fatMult = (pos,c) => 1+(c-1)*Math.pow(pos,1.5);
+const SUNRISE = 6*60+45, SUNSET = 21*60+20; // Pays Basque ~15 mai, heure locale CEST
 
 function haversine(a,b){
   const R=6371, dLat=(b[0]-a[0])*Math.PI/180, dLon=(b[1]-a[1])*Math.PI/180;
@@ -18553,7 +18554,7 @@ function computePassages(start,total,fat,pauseRavito,pauseBase){
     return { dist, dp:cp.dpSeg, dm:cp.dmSeg, eq:naismith(dist,cp.dpSeg,cp.dmSeg), pos };
   });
   const totEq = segs.reduce((a,s)=>a+s.eq,0);
-  const raw = [{ ...CPS_BASE[0], el:0, heure:fmtH(start,0), pace:0, segTime:0 }];
+  const raw = [{ ...CPS_BASE[0], el:0, heure:fmtH(start,0), pace:0, segTime:0, absTime:start }];
   segs.forEach((s,i)=>{
     const st = (s.eq/totEq)*total*fatMult(s.pos,fat);
     raw.push({ _st:st, _dist:s.dist, ...CPS_BASE[i+1] });
@@ -18565,7 +18566,7 @@ function computePassages(start,total,fat,pauseRavito,pauseBase){
     const prev=CPS_BASE[i-1];
     if(i>1){ if(prev.base) cumulPause+=pauseBase; else if(prev.ravito) cumulPause+=pauseRavito; }
     const st=r._st*norm; cum+=st;
-    return { ...r, el:cum, heure:fmtH(start,cum+cumulPause), pace:r._dist>0?st/r._dist:0, segTime:st };
+    return { ...r, el:cum, heure:fmtH(start,cum+cumulPause), pace:r._dist>0?st/r._dist:0, segTime:st, absTime:start+cum+cumulPause };
   });
 }
 
@@ -18755,8 +18756,9 @@ function App(){
             const isBase=p.base, isArr=p.arrivee;
             const bc=isArr?"#E15629":isBase?"#063E3E":p.ravito?"#388F7F":"#e0e0e0";
             const bg=isArr?"#fff8f5":isBase?"#e8f4f2":p.ravito?"#fff":"#f7f7f7";
+            const tod=p.absTime%(24*60), dnColor=tod>=SUNRISE&&tod<=SUNSET?"#FFC107":"#1E3A5F";
             return(
-              <div key={i} style={{background:bg,borderRadius:10,padding:"10px 14px",borderLeft:`4px solid ${bc}`,opacity:p.ravito?1:0.75}}>
+              <div key={i} style={{background:bg,borderRadius:10,padding:"10px 14px",borderLeft:`4px solid ${bc}`,borderRight:`4px solid ${dnColor}`,opacity:p.ravito?1:0.75}}>
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                   <div style={{flex:1,minWidth:0}}>
                     <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:2}}>
