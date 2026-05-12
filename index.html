@@ -18563,7 +18563,7 @@ function computePassages(start,total,fat){
   return raw.map((r,i)=>{
     if(i===0) return r;
     const st=r._st*norm; cum+=st;
-    return { ...r, el:cum, heure:fmtH(start,cum), pace:r._dist>0?st/r._dist:0 };
+    return { ...r, el:cum, heure:fmtH(start,cum), pace:r._dist>0?st/r._dist:0, segTime:st };
   });
 }
 
@@ -18611,7 +18611,7 @@ function MapView({ passages }){
         ${badge?`<div style="font-size:10px;background:${color};color:#fff;display:inline-block;padding:1px 6px;border-radius:4px;margin-top:3px">${badge}</div>`:''}
         <div style="color:#636363;font-size:12px;margin-top:3px">${cp.km} km · D+ cumulé ${cp.dpCum}m</div>
         <div style="font-weight:700;color:#E15629;font-size:18px;margin-top:4px">${p.heure||'--:--'}</div>
-        ${i>0&&p.el?`<div style="color:#636363;font-size:12px;margin-top:2px">Tps course : ${fmtDur(p.el)} · ${fmtPace(p.pace)}/km</div>`:''}
+        ${i>0&&p.segTime?`<div style="color:#636363;font-size:12px;margin-top:2px">Section : ${fmtDur(p.segTime)} · ${fmtPace(p.pace)}/km</div>`:''}
         ${i>0?`<div style="font-size:11px;color:#388F7F;margin-top:2px">↑ ${cp.dpSeg}m · ↓ ${cp.dmSeg}m </div>`:''}
       `);
       mk.addTo(leafRef.current);
@@ -18683,6 +18683,7 @@ function App(){
             {label:"Départ",  val:passages[0].heure,               bg:"#f0f8f7",color:"#063E3E"},
             {label:"Arrivée", val:passages[passages.length-1].heure,bg:"#fff8f5",color:"#E15629"},
             {label:"Durée",   val:fmtDur(total),                   bg:"#f5f2ed",color:"#063E3E"},
+            {label:"Allure moy.", val:total>0?fmtPace(total/130)+"/km":"--", bg:"#f0f4f0",color:"#388F7F"},
           ].map((c,i)=>(
             <div key={i} style={{flex:1,background:c.bg,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
               <div style={{fontSize:10,color:"#636363",marginBottom:3}}>{c.label}</div>
@@ -18743,7 +18744,7 @@ function App(){
                   </div>
                   <div style={{textAlign:"right",marginLeft:12,flexShrink:0}}>
                     <div style={{fontSize:22,fontWeight:700,color:isArr?"#E15629":"#063E3E",lineHeight:1}}>{p.heure}</div>
-                    {i>0&&<div style={{fontSize:11,color:"#388F7F",fontWeight:600,marginTop:3}}>{fmtDur(p.el)}</div>}
+                    {i>0&&<div style={{fontSize:11,color:"#388F7F",fontWeight:600,marginTop:3}}>{fmtDur(p.segTime)}</div>}
                   </div>
                 </div>
                 {i>0&&(
